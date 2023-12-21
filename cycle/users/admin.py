@@ -14,6 +14,7 @@ class UserAdminConfig(UserAdmin):
         (None, {'fields': ('username','first_name', 'last_name', 'password')}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser')}),
         ('Status', {'fields': ('is_active', 'last_login')}),
+        ('Roles', {'fields': ('role',)}),
     )
 
     add_fieldsets = (
@@ -37,6 +38,7 @@ class RenterAdminConfig(UserAdmin):
         ('Permissions', {'fields': ('is_staff', 'is_superuser')}),
         ('Instutution Details', {'fields': ('institution', 'registration_number')}),
         ('Status', {'fields': ('is_active', 'last_login')}),
+        ('Roles', {'fields': ('role',)}),
     )
 
     add_fieldsets = (
@@ -78,27 +80,6 @@ class RenteeAdminConfig(UserAdmin):
          }),
     )
 
-class AdministratorAdminConfig(UserAdmin):
-
-    search_fields = ('email', 'username', 'first_name', 'role')
-    list_filter = ('email', 'username', 'first_name', 'last_name', 'role', 'is_active')
-    ordering = ('-last_login',)
-    list_display = ('first_name', 'last_name', 'username', 'email', 'is_active', 'is_superuser', 'role')
-
-    fieldsets = (
-        (None, {'fields': ('id', 'username','first_name', 'last_name', 'password')}),
-        ('Permissions', {'fields': ('is_staff', 'is_superuser')}),
-        ('Status', {'fields': ('is_active', 'last_login', 'joined_on')}),
-    )
-
-    add_fieldsets = (
-        (None,
-         {
-            'classes': 'wide',
-            'fields': ('username', 'first_name', 'last_name', 'email','password1', 'password2',
-                       'is_active', 'is_staff', 'is_superuser', 'role')
-         })
-    )
 
 class RenterProfileAdminConfig(UserAdmin):
     search_fields = ('user__username','renter_id')
@@ -107,6 +88,6 @@ class RenterProfileAdminConfig(UserAdmin):
 admin.site.register(User, UserAdminConfig)
 admin.site.register(Rentee, RenteeAdminConfig)
 admin.site.register(Renter, RenterAdminConfig)
-admin.site.register(Administrator, AdministratorAdminConfig)
+admin.site.register(Administrator)
 admin.site.register(RenterProfile)
 admin.site.register(RenteeProfile)
