@@ -118,7 +118,7 @@ class Rent(models.Model):
 
 class RenterProfile(models.Model):
     user = models.OneToOneField(Renter, on_delete=models.CASCADE)
-    renter_id = models.CharField(max_length=10, unique=True)
+    renter_id = models.CharField(max_length=60, unique=True)
     last_rent_date = models.DateField(null=True, blank=True)
     max_rent_streak = models.IntegerField(default=0)
 
@@ -162,7 +162,7 @@ class Rentee(User):
 class RenteeProfile(models.Model):
     """ Handles Creation of Rentee-Profile objects """
     user = models.OneToOneField(Rentee, on_delete=models.CASCADE)
-    rentee_id = models.CharField(max_length=10, unique=True)
+    rentee_id = models.CharField(max_length=60, unique=True)
 
     def __str__(self):
         return self.rentee_id
