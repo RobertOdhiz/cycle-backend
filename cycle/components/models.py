@@ -20,6 +20,8 @@ class Bike(BaseModel):
     owner = models.ForeignKey(Renter, on_delete=models.CASCADE, related_name="bike_owner")
     rented_by = models.ManyToManyField(Rentee, related_name="bike_reentee")
     rented = models.BooleanField(default=False)
+    brand = models.CharField(max_length=60, null=True)
+    rent_price = models.IntegerField(default=0)
 
 class Wallet(BaseModel):
     """ Model that handles creation of each Users wallet """

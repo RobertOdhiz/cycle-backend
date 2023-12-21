@@ -81,7 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
     def __str__(self):
-        return self.first_name
+        return self.first_name + self.last_name
     
     # def natural_key(self):
     #     return (self.username,)
