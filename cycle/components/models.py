@@ -1,8 +1,7 @@
-# Assuming you are working within a Django view or API endpoint
-from django.http import HttpResponse
 from django.db import models
 from uuid import uuid4
 from users.models import User, Rentee, Renter
+from django.utils import timezone
 
 class BaseModel(models.Model):
     """
@@ -23,10 +22,17 @@ class Bike(BaseModel):
     brand = models.CharField(max_length=60, null=True)
     rent_price = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.id}.{self.brand} {self.owner}'
+
 class Wallet(BaseModel):
     """ Model that handles creation of each Users wallet """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     balance = models.IntegerField(default=0)
+    last_top_up = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.id}.{self.user}'
 
 class History(BaseModel):
     """ Model that handles creation of rental history """
@@ -46,7 +52,7 @@ class History(BaseModel):
         RENTER_RENTAL = 'Renter Rental'
         RENTEE_RENTAL = 'Rentee Rental'
 
-    event_type = models.CharField(
+    rental_status = models.CharField(
         max_length=20,
         choices=EventType.choices,
         default=EventType.BIKE_RENTED,
@@ -61,7 +67,7 @@ class History(BaseModel):
                 rentee=rentee,
                 renter=renter,
                 amount_paid=amount_paid,
-                event_type=cls.EventType.BIKE_RENTED,
+                rental_status=cls.EventType.BIKE_RENTED,
             )
             return history
 
@@ -72,7 +78,7 @@ class History(BaseModel):
         if logged_in_user.role == 'RENTEE':
             history = cls.objects.create(
                 bike=bike,
-                event_type=cls.EventType.BIKE_RETURNED,
+                rental_status=cls.EventType.BIKE_RETURNED,
             )
             return history
 
@@ -83,7 +89,7 @@ class History(BaseModel):
             history = cls.objects.create(
                 renter=renter,
                 amount_paid=amount_paid,
-                event_type=cls.EventType.RENTER_RENTAL,
+                rental_status=cls.EventType.RENTER_RENTAL,
             )
             return history
 
@@ -94,7 +100,7 @@ class History(BaseModel):
             history = cls.objects.create(
                 rentee=rentee,
                 amount_paid=amount_paid,
-                event_type=cls.EventType.RENTEE_RENTAL,
+                rental_status=cls.EventType.RENTEE_RENTAL,
             )
             return history
 

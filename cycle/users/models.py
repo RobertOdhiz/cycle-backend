@@ -23,7 +23,8 @@ class UserManager(BaseUserManager):
             raise ValueError("Please enter an email address")
         
         email = self.normalize_email(email)
-        username, domain = email.split('@')
+        if not username:
+            username, domain = email.split('@')
         user = self.model(email=email, username=username, first_name=first_name, **other_fields)
 
         user.set_password(password)
